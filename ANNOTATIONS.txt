@@ -1,0 +1,85 @@
+########## DOCKER
+
+### DOCKERFILE
+## Gera instruções para o build de uma imagem
+
+docker build -f Dockerfile -t alexkonrad/node .
+(-f = path do dockerfile, -t nome da tag)
+
+### VOLUMES
+
+docker run -v "/var/www" ubuntu -> cria um volume ao criar o container
+
+docker run -it -v "/home/konrad/projects/test-docker-volumes:/var/www" ubuntu -> Cria um container e um volume que aponta para minha pasta local test-docker-volumes
+
+docker run -d -it -v "$( pwd ):/var/www" ubuntu -> Mapeia o volume usando a pasta atual do host
+
+docker inspect -> inspeciona o container
+
+
+# Cria um container 'node' para um projeto local e inicializa o projeto (npm start), mapeando a porta para ser acessada de fora (parametro -w seta o diretorio de trabalho)
+
+docker run -p 12345:5000 -v "/home/konrad/projects/alright-calc:/var/www" -w "/var/www" node npm start
+
+
+### IMAGES
+doccker ps -> lista os containers ativos
+doccker ps -a -> lista todos os containers
+
+docker images  -> lista as images
+
+docker run <nome_da_imagem> -> inicia um novo container
+docker run -d <nome_da_imagem> -> inicia um novo container e volta para o terminal local
+
+
+docker start <container_id>  -> ativa um container ja criado
+
+docker stop <container_name> OU
+docker stop <container_id> -> desativa um container (em 10 segundos)
+
+
+docker stop -t 0 <container_id> -> desativa um container (em 0 segundos)
+
+docker start -a -i <container_id> -> ativa um container e entra no terminar interativo
+docker run -it <nome_da_imagem> -> inicia um novo container e entra no terminal interativo
+
+docker container prune -> remove todos container inativos
+
+# Mapeando portas (-P gera um mapeamento de uma porta externa para uma porta interna do container)
+docker run -d -P <nome_da_imagem>
+
+# Mapeando uma porta local especifica (exemplo local 12345 para 80 do container)
+docker run -d -p 12345:80 <nome_da_imagem>
+
+# Variavel de ambiente (-e)
+docker run -d -P -e AUTOR="Alex Konrad" <nome_da_imagem>
+
+# exibir portas de um container
+docker port <container>
+
+# com o parametro --name posso nomear meu container
+docker run -d -P --name meu-site <nome_da_imagem>
+
+# Lista os ids dos containers
+docker ps -q
+
+# Para todos containers imediatamente
+docker stop -t 0 $( docker ps -q )
+
+
+=========================================
+
+Segue também uma breve lista dos comandos utilizados:
+
+docker ps - exibe todos os containers em execução no momento.
+docker ps -a - exibe todos os containers, independentemente de estarem em execução ou não.
+docker run -it NOME_DA_IMAGEM - conecta o terminal que estamos utilizando com o do container.
+docker start ID_CONTAINER - inicia o container com id em questão.
+docker stop ID_CONTAINER - interrompe o container com id em questão.
+docker start -a -i ID_CONTAINER - inicia o container com id em questão e integra os terminais, além de permitir interação entre ambos.
+docker rm ID_CONTAINER - remove o container com id em questão.
+docker container prune - remove todos os containers que estão parados.
+docker rmi NOME_DA_IMAGEM - remove a imagem passada como parâmetro.
+docker run -d -P --name NOME dockersamples/static-site - ao executar, dá um nome ao container.
+docker run -d -p 12345:80 dockersamples/static-site - define uma porta específica para ser atribuída à porta 80 do container, neste caso 12345.
+docker run -d -P -e AUTHOR="Fulano" dockersamples/static-site - define uma variável de ambiente AUTHOR com o valor Fulano no container criado.
